@@ -518,6 +518,26 @@ assert p.exitcode == 0, f"p.exitcode is {p.exitcode}"
     )
 
 
+def test_fork_request_segfault():
+    run_script(
+        """\
+import os
+import sys
+import requests
+
+import setproctitle
+print(setproctitle.__version__)
+
+pid = os.fork()
+if not pid:
+    print('HTTP GET goole.com: ')
+    print(requests.get('https://google.com'))
+    sys.exit()
+os.wait()
+"""
+    )
+
+
 # Support functions
 
 
